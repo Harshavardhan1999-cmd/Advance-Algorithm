@@ -68,8 +68,13 @@ int main() {
     }
 
     cout << "Enter target: ";
-    if (!(cin >> target) || target < -1e9 || target > 1e9) {
-        cout << "Invalid target input. Retry." << endl;
+    if (!(cin >> target)) {  
+        cout << "Invalid target input. Please enter a valid integer." << endl;
+        return 1;
+    }
+
+    if (target < -1000000000 || target > 1000000000) {  
+        cout << "Error: Target must be in the range -10^9 to 10^9. Retry." << endl;
         return 1;
     }
 
