@@ -1,91 +1,70 @@
 #include <iostream>
+#include <vector>
 using namespace std;
 
-// Function to input a sparse matrix
-void inputSparseMatrix(int rows, int cols, int matrix[50][50]) {
-    cout << "Enter the elements of the sparse matrix:" << endl;
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < cols; j++) {
-            cin >> matrix[i][j];
+// Function to read a matrix from user input
+void readMatrix(int r, int c, vector<vector<int>> &mat) {
+    cout << "Enter the elements of the matrix:" << endl;
+    for (int i = 0; i < r; i++) {
+        vector<int> row(c);
+        for (int j = 0; j < c; j++) {
+            cin >> row[j];
         }
+        mat.push_back(row);
     }
 }
 
-// Function to display the entered matrix
-void displayMatrix(int rows, int cols, int matrix[50][50]) {
-    cout << "Here is the sparse matrix you entered:" << endl;
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < cols; j++) {
-            cout << matrix[i][j] << " ";
+// Function to display a matrix
+void printMatrix(const vector<vector<int>> &mat) {
+    cout << "Here is the matrix you entered:" << endl;
+    for (const auto &row : mat) {
+        for (int val : row) {
+            cout << val << " ";
         }
         cout << endl;
     }
 }
 
-// Function to count the non-zero elements in the matrix
-int countNonZeroElements(int rows, int cols, int matrix[50][50]) {
-    int nonZeroCount = 0;
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < cols; j++) {
-            if (matrix[i][j] != 0) {
-                nonZeroCount++;
+// Function to generate sparse matrix representation
+vector<vector<int>> generateSparse(const vector<vector<int>> &mat) {
+    vector<vector<int>> sparse(3);
+    for (int i = 0; i < mat.size(); i++) {
+        for (int j = 0; j < mat[i].size(); j++) {
+            if (mat[i][j] != 0) {
+                sparse[0].push_back(i);  // Row index
+                sparse[1].push_back(j);  // Column index
+                sparse[2].push_back(mat[i][j]);  // Non-zero value
             }
         }
     }
-    return nonZeroCount;
+    return sparse;
 }
 
-// Function to convert the sparse matrix to a 2D representation
-void createSparseRepresentation(int rows, int cols, int matrix[50][50], int nonZeroCount, int sparse[3][50]) {
-    int index = 0;
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < cols; j++) {
-            if (matrix[i][j] != 0) {
-                sparse[0][index] = i;  // Row index
-                sparse[1][index] = j;  // Column index
-                sparse[2][index] = matrix[i][j];  // Value
-                index++;
-            }
-        }
-    }
-}
-
-// Function to display the sparse matrix representation
-void displaySparseRepresentation(int nonZeroCount, int sparse[3][50]) {
+// Function to display sparse matrix representation
+void printSparse(const vector<vector<int>> &sparse) {
     cout << "Sparse Matrix Representation:" << endl;
     cout << "Row ->    ";
-    for (int i = 0; i < nonZeroCount; i++) {
-        cout << sparse[0][i] << " ";
-    }
+    for (int val : sparse[0]) cout << val << " ";
     cout << endl;
     cout << "Column -> ";
-    for (int i = 0; i < nonZeroCount; i++) {
-        cout << sparse[1][i] << " ";
-    }
+    for (int val : sparse[1]) cout << val << " ";
     cout << endl;
     cout << "Value ->  ";
-    for (int i = 0; i < nonZeroCount; i++) {
-        cout << sparse[2][i] << " ";
-    }
+    for (int val : sparse[2]) cout << val << " ";
     cout << endl;
 }
 
-// Main function
 int main() {
-    int rows, cols;
-    cout << "Enter the number of rows and columns of the matrix: ";
-    cin >> rows >> cols;
+    int r, c;
+    cout << "Enter rows and columns of the matrix: ";
+    cin >> r >> c;
 
-    int matrix[50][50];  // Input matrix
-    int sparse[3][50];   // Sparse matrix representation
+    vector<vector<int>> mat;  // Input matrix
+    readMatrix(r, c, mat);
+    printMatrix(mat);
 
-    // Input and process the matrix
-    inputSparseMatrix(rows, cols, matrix);
-    displayMatrix(rows, cols, matrix);
-
-    int nonZeroCount = countNonZeroElements(rows, cols, matrix);
-    createSparseRepresentation(rows, cols, matrix, nonZeroCount, sparse);
-    displaySparseRepresentation(nonZeroCount, sparse);
+    vector<vector<int>> sparse = generateSparse(mat);
+    printSparse(sparse);
 
     return 0;
 }
